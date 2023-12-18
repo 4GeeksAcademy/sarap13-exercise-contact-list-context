@@ -2,17 +2,22 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import MikePhoto from "../../img/m101.jpg";
+import propTypes from "prop-types";
 
 export const ContactCard = props => {
 	const [state, setState] = useState({
 		//initialize state here
 	});
 
+	// ContactCard tiene props al ser un componente React, asi que los usaremos para ponerles el valor.
+	// Creamos los props en nombre, email, phone, etc. Se pone props.y la propiedad que hemos visto en la API.
+	// IMPORTANTE!!!! Necesitamos en propTypes (abajo) meterlos en el objeto y especificarles que tipo es (string, array, etc)
+
 	return (
 		<li className="list-group-item">
 			<div className="row w-100">
 				<div className="col-12 col-sm-6 col-md-3 px-0">
-					<img src={MikePhoto} alt="Mike Anamendolla" className="rounded-circle mx-auto d-block img-fluid" />
+					<img src={MikePhoto} alt="Contact Photo" className="rounded-circle mx-auto d-block img-fluid" />
 				</div>
 				<div className="col-12 col-sm-6 col-md-9 text-center text-sm-left">
 					<div className=" float-right">
@@ -23,10 +28,10 @@ export const ContactCard = props => {
 							<i className="fas fa-trash-alt" />
 						</button>
 					</div>
-					<label className="name lead">Mike Anamendolla</label>
+					<label className="name lead">{props.full_name}</label>
 					<br />
 					<i className="fas fa-map-marker-alt text-muted mr-3" />
-					<span className="text-muted">5842 Hillcrest Rd</span>
+					<span className="text-muted">{props.address}</span>
 					<br />
 					<span
 						className="fa fa-phone fa-fw text-muted mr-3"
@@ -34,7 +39,7 @@ export const ContactCard = props => {
 						title=""
 						data-original-title="(870) 288-4149"
 					/>
-					<span className="text-muted small">(870) 288-4149</span>
+					<span className="text-muted small">{props.phone}</span>
 					<br />
 					<span
 						className="fa fa-envelope fa-fw text-muted mr-3"
@@ -42,7 +47,7 @@ export const ContactCard = props => {
 						data-original-title=""
 						title=""
 					/>
-					<span className="text-muted small text-truncate">mike.ana@example.com</span>
+					<span className="text-muted small text-truncate">{props.email}</span>
 				</div>
 			</div>
 		</li>
@@ -53,9 +58,17 @@ export const ContactCard = props => {
  * Define the data-types for
  * your component's properties
  **/
+
+// Aqui metemos el tipo de prop que es y de que tipo es.
+// Si no lo ponemos aquí nos dara ERROR!
+
 ContactCard.propTypes = {
 	history: PropTypes.object,
-	onDelete: PropTypes.func
+	onDelete: PropTypes.func,
+	full_name: PropTypes.string,
+	address: PropTypes.string,
+	phone: propTypes.string,
+	email: propTypes.string
 };
 
 /**
