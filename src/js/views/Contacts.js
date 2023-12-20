@@ -6,7 +6,9 @@ import { Modal } from "../component/Modal";
 
 export const Contacts = () => {
 	const [state, setState] = useState({
-		showModal: false
+		showModal: false,
+		contactId: null
+		// Añadimos como stado en el modal el contactID para que de primeras sea null y cuando se le cliquee
 	});
 
 	// Paso 3 ejecutamos el contexto  y extraemos los estados. SIEMPRE va a ser así
@@ -39,13 +41,19 @@ export const Contacts = () => {
 								address={item.address}
 								phone={item.phone}
 								email={item.email}
-								onDelete={() => setState({ showModal: true })}
+								onDelete={() => {
+									setState({ showModal: true, contactId: item.id });
+								}}
+								// Se llama al evento onDelete con una función anonima que llama a dos cosas:
+								// 1. Cuando se active el onDelete, se mostrará un modal
+								// 2.Cogerá el id del contacto que se ha seleccionado.
 							/>
 						))}
 					</ul>
 				</div>
 			</div>
-			<Modal show={state.showModal} onClose={() => setState({ showModal: false })} />
+			<Modal id={state.contactId} show={state.showModal} onClose={() => setState({ showModal: false })} />
+			{/* En el modal tendrá el ID del selected. */}
 		</div>
 	);
 };

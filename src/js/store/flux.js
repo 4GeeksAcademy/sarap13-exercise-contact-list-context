@@ -1,6 +1,6 @@
 import { number } from "prop-types";
 
-const getState = ({ getStore, setStore }) => {
+const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			//Creamos un espacio donde meteremos los contactos.
@@ -46,6 +46,31 @@ const getState = ({ getStore, setStore }) => {
 				})
 					.then(response => {
 						console.log(response);
+						return response.json();
+					})
+					.then(data => {
+						console.log(data);
+					})
+					.catch(error => console.log(error));
+			},
+
+			// función en actions para eliminar el contacto.
+			// Se le pasa contactId creado en el state de Contacts.js para que coja el id.
+			// En el delete no hay que poner nada mas que el method.
+
+			deleteContact: contactId => {
+				// console.log(contactId); Hacer siempre un console.log para ver si funciona
+				fetch(`https://playground.4geeks.com/apis/fake/contact/${contactId}`, {
+					method: "DELETE"
+				})
+					.then(response => {
+						console.log(response);
+						if (response.status === 201) {
+							// Haremos un condicional para que cuando el usuario se elimine y este ok (cod 201) se ejecute la función getAgenda de nuevo.
+							// Para acceder a las funciones de actions desde mismo actions usaremos getActions que se tiene que poner en getStore arriba SIEMPRE
+							// hay que crear getActions y hay que acceder a la agenda a través de getActions ya que es una función de si mismo.
+							getActions().getAllAgenda();
+						}
 						return response.json();
 					})
 					.then(data => {
