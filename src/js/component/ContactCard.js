@@ -1,13 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Context } from "../store/appContext.js"; //Paso 2 importar el context
 import MikePhoto from "../../img/m101.jpg";
-import propTypes from "prop-types";
+import { UpdateModal } from "../component/UpdateModal.js";
+import { Link } from "react-router-dom";
 
 export const ContactCard = props => {
 	const [state, setState] = useState({
 		//initialize state here
 	});
+
+	const { store, actions } = useContext(Context);
+
+	const [selectedContact, setSelectedContact] = useState({
+		full_name: `${props.full_name}`,
+		email: `${props.email}`,
+		agenda_slug: "sarap",
+		address: `${props.address}`,
+		phone: `${props.phone}`,
+		id: `${props.id}`
+	});
+	console.log(selectedContact);
+
+	useEffect(() => {
+		store.currentContact = selectedContact;
+	}, []);
 
 	// ContactCard tiene props al ser un componente React, asi que los usaremos para ponerles el valor.
 	// Creamos los props en nombre, email, phone, etc. Se pone props.y la propiedad que hemos visto en la API.
@@ -22,7 +40,10 @@ export const ContactCard = props => {
 				<div className="col-12 col-sm-6 col-md-9 text-center text-sm-left">
 					<div className=" float-right">
 						<button className="btn">
-							<i className="fas fa-pencil-alt mr-3" />
+							{/* //onClick={() => props.onUpdate()}> */}
+							<Link className="btn" to="/UpdateModal">
+								<i className="fas fa-pencil-alt mr-3" />
+							</Link>
 						</button>
 						<button className="btn" onClick={() => props.onDelete()}>
 							<i className="fas fa-trash-alt" />
@@ -65,10 +86,12 @@ export const ContactCard = props => {
 ContactCard.propTypes = {
 	history: PropTypes.object,
 	onDelete: PropTypes.func,
+	onUpdate: PropTypes.func,
 	full_name: PropTypes.string,
 	address: PropTypes.string,
-	phone: propTypes.string,
-	email: propTypes.string
+	phone: PropTypes.string,
+	email: PropTypes.string,
+	id: PropTypes.number
 };
 
 /**
@@ -77,4 +100,5 @@ ContactCard.propTypes = {
  **/
 ContactCard.defaultProps = {
 	onDelete: null
+	// onUpdate: selectedContact
 };

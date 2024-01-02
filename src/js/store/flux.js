@@ -4,7 +4,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			//Creamos un espacio donde meteremos los contactos.
-			listContacts: []
+			listContacts: [],
+			// Creamos un espacio donde meteremos el contacto que queremos editar
+			currentContact: {}
 		},
 		actions: {
 			//(Arrow) Functions that update the Store
@@ -78,6 +80,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					.catch(error => console.log(error));
 			}
+
+			// updateContact: contactId => {
+			// 	fetch(`https://playground.4geeks.com/apis/fake/contact/${contactId}`, {
+			// 		method: "PUT",
+			// 		body: JSON.stringify({
+			// 			full_name: fullName,
+			// 			email: email,
+			// 			agenda_slug: "sarap",
+			// 			address: address,
+			// 			phone: phone
+			// 		}),
+			// 		headers: {
+			// 			"Content-Type": "application/json"
+			// 		}
+			// 	})
+			// 		.then(response => {
+			// 			console.log(response);
+			// 			return response.json();
+			// 		})
+			// 		.then(data => {
+			// 			console.log(data);
+			// 		})
+			// 		.catch(error => console.log(error));
+			// 	}
+			// 	)
+
+			// Quiero crear una función que al darle al lapiz, me aparezca el formulario con el placeholder de la información del cliente y al escribir se modifique y se guarde
 		}
 	};
 };

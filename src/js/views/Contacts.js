@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Context } from "../store/appContext.js"; //Paso 2 importar el context
 import { ContactCard } from "../component/ContactCard.js";
 import { Modal } from "../component/Modal";
+import { UpdateModal } from "../component/UpdateModal.js";
 
 export const Contacts = () => {
 	const [state, setState] = useState({
@@ -44,6 +45,9 @@ export const Contacts = () => {
 								onDelete={() => {
 									setState({ showModal: true, contactId: item.id });
 								}}
+								// onUpdate={() => {
+								// 	setState({ showModal: true, contactId: item.id });
+								// }}
 								// Se llama al evento onDelete con una función anonima que llama a dos cosas:
 								// 1. Cuando se active el onDelete, se mostrará un modal
 								// 2.Cogerá el id del contacto que se ha seleccionado.
