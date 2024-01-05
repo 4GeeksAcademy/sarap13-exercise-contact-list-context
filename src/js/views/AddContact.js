@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react"; //Paso 1 importar el useContext
 import { Context } from "../store/appContext.js"; //Paso 2 importar el context
-
 import { Link } from "react-router-dom";
 
 export const AddContact = () => {

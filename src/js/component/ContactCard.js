@@ -21,7 +21,7 @@ export const ContactCard = props => {
 		phone: `${props.phone}`,
 		id: `${props.id}`
 	});
-	console.log(selectedContact);
+	// console.log(selectedContact);
 
 	useEffect(() => {
 		store.currentContact = selectedContact;

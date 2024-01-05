@@ -4,54 +4,78 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-export const UpdateModal = () => {
+export const UpdateModal = ({ currentContact, onSave }) => {
 	const [state, setState] = useState({
 		//initialize state here
+		showModal: false
 	});
 
 	// Paso 3 ejecutamos el contexto  y extraemos los estados. SIEMPRE va a ser así
 	const { store, actions } = useContext(Context);
 
-	const [contactSelected, setcontactSelected] = useState({
-		full_name: "",
-		email: "",
-		phone: "",
-		address: ""
-	});
+	// Traemos la información del store de CurrentContact;
+	const selectedContact = store.currentContact;
+	console.log(selectedContact);
+	// Para preservar la info del contacto
+	const [originalSelectedContact, setOriginalSelectedContact] = useState({});
+	// Creamos un estado para almacenar el contacto editado y le damos como valor inicial el actual contacto que teniamos escogido.
+	const [editedContact, setEditedContact] = useState({});
 
-	const [updatedFullName, setUpdatedFullName] = useState(contactSelected.full_name);
-	const [updatedEmail, setUpdatedEmail] = useState(contactSelected.email);
-	const [updatedPhone, setUpdatedPhone] = useState(contactSelected.phone);
-	const [updatedAddress, setUpdatedAddress] = useState(contactSelected.address);
-	const [updatedId, setUpdatedId] = useState(selectedContact.id);
+	// Creamos los estados para cambiarlos por lo editado.
+	// const [updatedFullName, setUpdatedFullName] = useState(editedContact.full_name);
+	// const [updatedEmail, setUpdatedEmail] = useState(editedContact.email);
+	// const [updatedPhone, setUpdatedPhone] = useState(editedContact.phone);
+	// const [updatedAddress, setUpdatedAddress] = useState(editedContact.address);
+	// const [updatedId, setUpdatedId] = useState(selectedContact.id); No cambia el ID
 
-	function HandleUpdate(id) {
-		actions.updateContact(
-			id,
-			{
-				full_name: updatedFullName,
-				email: updatedEmail,
-				phone: updatedPhone,
-				address: updatedAddress
-			},
-			(store.currentContact = {})
-		);
+	function handleUpdate(event) {
+		// actions.updateContact(
+		// 	// {
+		// 	// 	// full_name: {props.full_name},
+		// 	// 	// email: {props.email},
+		// 	// 	phone: updatedPhone,
+		// 	// 	address: updatedAddress
+		// 	// },
+		// 	(store.currentContact = {})
+		// )
+
+		// Aquí cambiamos el estado edited contact todos los target les asignamos el valor del input
+		setEditedContact({ ...editedContact, [event.target.name]: event.target.value });
 		// Tenemos que seleccionar el id del elemento a eliminar. Como modal trabaja con props, para llamar al ID deberemos usar los props que en el boton ya se están llamando, por lo tanto aquí usaremos el nombre del prop(id) y se le pasa a actions el parametro id.
 		// IMPORTANTE debemos ponerlos también en proptypes debajo.
 	}
 
 	function handleSubmit(event) {
 		event.preventDefault();
-		HandleUpdate(updatedId);
+		handleUpdate();
+		actions.updateContact({
+			full_name: editedContact.full_name,
+			email: editedContact.email,
+			phone: editedContact.phone,
+			address: editedContact.address
+		});
+		// updatedFullName, updatedEmail, updatedPhone, updatedAddress, updatedId);
 		// console.log(fullName, email, phone, address);
-		// actions.updateContact(updatedFullName, updatedEmail, updatedPhone, updatedAddress);
 		// store.currentContact = {};
 	}
 
+	function handleGetBackToContacts(e) {
+		setEditedContact(originalSelectedContact);
+		// Deberia deshacer todos los cambios escritos en value
+		// Hacer condicional? Si el boton save no ha sido apretado, edited contact = selectedContact
+	}
+
+	// En este caso
 	useEffect(() => {
-		const selectedContact = store.currentContact;
-		setcontactSelected(selectedContact);
-	}, []);
+		// Se cambiará el estado editedContact cada vez que selected contact cambie.
+		// setUpdatedFullName(editedContact.full_name);
+		// setUpdatedEmail(editedContact.email);
+		// setUpdatedPhone(editedContact.phone);
+		// setUpdatedAddress(editedContact.address);
+		// setUpdatedId(editedContact.id);
+		setOriginalSelectedContact(selectedContact);
+		setEditedContact(selectedContact);
+	}, [selectedContact]);
 
 	return (
 		<div className=" container">
@@ -64,9 +88,10 @@ export const UpdateModal = () => {
 						<input
 							type="text"
 							className="form-control"
-							placeholder={contactSelected.full_name}
-							value={contactSelected.full_name}
-							onChange={event => setUpdatedFullName(event.target.value)}
+							placeholder={selectedContact.full_name}
+							value={editedContact.full_name}
+							onChange={handleUpdate}
+							// onChange={event => handleUpdate(event.target.value)}
 							// al ser un form queremos siempre aplicar el onChange.
 							// Dentro ira un evento como parametro que cambiara el estadoFullName por el valor del input
 						/>
@@ -76,9 +101,9 @@ export const UpdateModal = () => {
 						<input
 							type="email"
 							className="form-control"
-							placeholder={contactSelected.email}
-							value={contactSelected.email}
-							onChange={event => setUpdatedEmail(event.target.value)}
+							placeholder={selectedContact.email}
+							value={editedContact.email}
+							onChange={handleUpdate}
 						/>
 					</div>
 					<div className="form-group">
@@ -86,9 +111,9 @@ export const UpdateModal = () => {
 						<input
 							type="phone"
 							className="form-control"
-							placeholder={contactSelected.phone}
-							value={contactSelected.phone}
-							onChange={event => setUpdatedPhone(event.target.value)}
+							placeholder={selectedContact.phone}
+							value={editedContact.phone}
+							onChange={handleUpdate}
 						/>
 					</div>
 					<div className="form-group">
@@ -96,12 +121,12 @@ export const UpdateModal = () => {
 						<input
 							type="text"
 							className="form-control"
-							placeholder={contactSelected.address}
-							value={contactSelected.address}
-							onChange={event => setUpdatedAddress(event.target.value)}
+							placeholder={selectedContact.address}
+							value={editedContact.address}
+							onChange={handleUpdate}
 						/>
 					</div>
-					<button type="submit" className="btn btn-primary form-control">
+					<button type="submit" className="btn btn-primary form-control" onClick={handleGetBackToContacts}>
 						save
 					</button>
 					<Link className="mt-3 w-100 text-center" to="/">
@@ -117,18 +142,9 @@ export const UpdateModal = () => {
  * your component's properties
  **/
 UpdateModal.propTypes = {
-	history: PropTypes.object,
-	onClose: PropTypes.func,
-	onUpdate: PropTypes.func,
-	show: PropTypes.bool,
-	id: PropTypes.number,
-	full_name: PropTypes.string,
-	email: PropTypes.string,
-	address: PropTypes.string,
-	phone: PropTypes.string
-	// poner el id en proptypes
+	currentContact: PropTypes.object,
+	onSave: PropTypes.func
 };
-
 /**
  * Define the default values for
  * your component's properties
@@ -136,4 +152,6 @@ UpdateModal.propTypes = {
 UpdateModal.defaultProps = {
 	show: false,
 	onClose: null
+	// currentContact: {},
+	// onSave: () => {}
 };
