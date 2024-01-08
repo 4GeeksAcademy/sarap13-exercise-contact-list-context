@@ -8,7 +8,8 @@ import { UpdateModal } from "../component/UpdateModal.js";
 export const Contacts = () => {
 	const [state, setState] = useState({
 		showModal: false,
-		contactId: null
+		contactId: null,
+		showUpdateModal: false
 		// Añadimos como stado en el modal el contactID para que de primeras sea null y cuando se le cliquee
 	});
 
@@ -45,9 +46,9 @@ export const Contacts = () => {
 								onDelete={() => {
 									setState({ showModal: true, contactId: item.id });
 								}}
-								// onUpdate={() => {
-								// 	setState({ showModal: true, contactId: item.id });
-								// }}
+								onUpdate={() => {
+									setState({ showUpdateModal: true, contactId: item.id });
+								}}
 								// Se llama al evento onDelete con una función anonima que llama a dos cosas:
 								// 1. Cuando se active el onDelete, se mostrará un modal
 								// 2.Cogerá el id del contacto que se ha seleccionado.
@@ -57,6 +58,11 @@ export const Contacts = () => {
 				</div>
 			</div>
 			<Modal id={state.contactId} show={state.showModal} onClose={() => setState({ showModal: false })} />
+			<UpdateModal
+				id={state.contactId}
+				show={state.showUpdateModal}
+				onClose={() => setState({ showUpdateModal: false })}
+			/>
 			{/* En el modal tendrá el ID del selected. */}
 		</div>
 	);
